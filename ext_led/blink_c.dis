@@ -1,0 +1,114 @@
+
+blink_c.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00008000 <__start>:
+    8000:	e3a0d902 	mov	sp, #32768	; 0x8000
+    8004:	e59f4024 	ldr	r4, [pc, #36]	; 8030 <wait_forever+0x8>
+    8008:	e59f9024 	ldr	r9, [pc, #36]	; 8034 <wait_forever+0xc>
+    800c:	e3a05000 	mov	r5, #0
+
+00008010 <clear_bss>:
+    8010:	e5845000 	str	r5, [r4]
+    8014:	e2844004 	add	r4, r4, #4
+    8018:	e1540009 	cmp	r4, r9
+    801c:	dafffffb 	ble	8010 <clear_bss>
+    8020:	e59f3010 	ldr	r3, [pc, #16]	; 8038 <wait_forever+0x10>
+    8024:	e12fff33 	blx	r3
+
+00008028 <wait_forever>:
+    8028:	e320f002 	wfe
+    802c:	eafffffd 	b	8028 <wait_forever>
+    8030:	00009000 	andeq	r9, r0, r0
+    8034:	0000a000 	andeq	sl, r0, r0
+    8038:	00008074 	andeq	r8, r0, r4, ror r0
+
+0000803c <delay>:
+    803c:	e3a03000 	mov	r3, #0
+    8040:	e24dd008 	sub	sp, sp, #8
+    8044:	e58d3004 	str	r3, [sp, #4]
+    8048:	e59d3004 	ldr	r3, [sp, #4]
+    804c:	e1500003 	cmp	r0, r3
+    8050:	da000005 	ble	806c <delay+0x30>
+    8054:	e59d3004 	ldr	r3, [sp, #4]
+    8058:	e2833001 	add	r3, r3, #1
+    805c:	e58d3004 	str	r3, [sp, #4]
+    8060:	e59d3004 	ldr	r3, [sp, #4]
+    8064:	e1530000 	cmp	r3, r0
+    8068:	bafffff9 	blt	8054 <delay+0x18>
+    806c:	e28dd008 	add	sp, sp, #8
+    8070:	e12fff1e 	bx	lr
+
+Disassembly of section .text.startup:
+
+00008074 <main>:
+    8074:	e59f305c 	ldr	r3, [pc, #92]	; 80d8 <main+0x64>
+    8078:	e92d4010 	push	{r4, lr}
+    807c:	e1a02003 	mov	r2, r3
+    8080:	e3a04805 	mov	r4, #327680	; 0x50000
+    8084:	e5930004 	ldr	r0, [r3, #4]
+    8088:	e59f104c 	ldr	r1, [pc, #76]	; 80dc <main+0x68>
+    808c:	e3c00407 	bic	r0, r0, #117440512	; 0x7000000
+    8090:	e5813000 	str	r3, [r1]
+    8094:	e5830004 	str	r0, [r3, #4]
+    8098:	e5930004 	ldr	r0, [r3, #4]
+    809c:	e3800401 	orr	r0, r0, #16777216	; 0x1000000
+    80a0:	e5830004 	str	r0, [r3, #4]
+    80a4:	e592301c 	ldr	r3, [r2, #28]
+    80a8:	e1a00004 	mov	r0, r4
+    80ac:	e3833701 	orr	r3, r3, #262144	; 0x40000
+    80b0:	e582301c 	str	r3, [r2, #28]
+    80b4:	ebffffe0 	bl	803c <delay>
+    80b8:	e5912000 	ldr	r2, [r1]
+    80bc:	e1a00004 	mov	r0, r4
+    80c0:	e5923028 	ldr	r3, [r2, #40]	; 0x28
+    80c4:	e3833701 	orr	r3, r3, #262144	; 0x40000
+    80c8:	e5823028 	str	r3, [r2, #40]	; 0x28
+    80cc:	ebffffda 	bl	803c <delay>
+    80d0:	e5912000 	ldr	r2, [r1]
+    80d4:	eafffff2 	b	80a4 <main+0x30>
+    80d8:	3f200000 	svccc	0x00200000
+    80dc:	00009000 	andeq	r9, r0, r0
+
+Disassembly of section .bss:
+
+00009000 <__bss_start>:
+    9000:	00000000 	andeq	r0, r0, r0
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347 	bcc	10d0d24 <__bss_end+0x10c6d24>
+   4:	35312820 	ldrcc	r2, [r1, #-2080]!	; 0xfffff7e0
+   8:	332e363a 			; <UNDEFINED> instruction: 0x332e363a
+   c:	732b312e 			; <UNDEFINED> instruction: 0x732b312e
+  10:	35326e76 	ldrcc	r6, [r2, #-3702]!	; 0xfffff18a
+  14:	39333033 	ldmdbcc	r3!, {r0, r1, r4, r5, ip, sp}
+  18:	7562312d 	strbvc	r3, [r2, #-301]!	; 0xfffffed3
+  1c:	31646c69 	cmncc	r4, r9, ror #24
+  20:	2e362029 	cdpcs	0, 3, cr2, cr6, cr9, {1}
+  24:	20312e33 	eorscs	r2, r1, r3, lsr lr
+  28:	37313032 			; <UNDEFINED> instruction: 0x37313032
+  2c:	30323630 	eorscc	r3, r2, r0, lsr r6
+	...
+
+Disassembly of section .ARM.attributes:
+
+00000000 <.ARM.attributes>:
+   0:	00003541 	andeq	r3, r0, r1, asr #10
+   4:	61656100 	cmnvs	r5, r0, lsl #2
+   8:	01006962 	tsteq	r0, r2, ror #18
+   c:	0000002b 	andeq	r0, r0, fp, lsr #32
+  10:	4d524105 	ldfmie	f4, [r2, #-20]	; 0xffffffec
+  14:	36373131 			; <UNDEFINED> instruction: 0x36373131
+  18:	2d465a4a 	vstrcs	s11, [r6, #-296]	; 0xfffffed8
+  1c:	07060053 	smlsdeq	r6, r3, r0, r0
+  20:	01090108 	tsteq	r9, r8, lsl #2
+  24:	01140412 	tsteq	r4, r2, lsl r4
+  28:	03170115 	tsteq	r7, #1073741829	; 0x40000005
+  2c:	011a0118 	tsteq	sl, r8, lsl r1
+  30:	0122021e 			; <UNDEFINED> instruction: 0x0122021e
+  34:	Address 0x0000000000000034 is out of bounds.
+
